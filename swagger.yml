@@ -1,0 +1,459 @@
+swagger: "2.0"
+info:
+  title: Swagger Hire-it
+  version: '1.0'
+tags:
+  - name: Contrato
+    description: Endpoints referentes à um contrato entre uma demanda e uma oferta
+  - name: Demanda
+    description: Endpoints referentes à um projeto
+  - name: Download
+  - name: Exportacao
+  - name: Importacao
+  - name: Localizacao
+    description: Endpoints referentes à Localizacao
+  - name: Oferta
+    description: Endpoints referentes à uma oferta de serviço
+  - name: Proposta
+    description: Endpoints referentes à uma proposta
+  - name: Softskill
+    description: Endpoints referentes à softskills
+  - name: Tecnologia
+    description: Endpoints referentes à tecnologias
+  - name: Usuário
+    description: Endpoints referentes ao usuário
+paths:
+  /contratos:
+    post:
+      tags: 
+      - "Contrato"
+      summary: "Cria um contrato"
+      description: "Cria um contrato entre uma oferta e uma demanda"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Contrato"
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Contrato already exists
+        '404':
+          description: Demanda and Oferta should exist to create a Contrato
+        '422':
+          description: Should verify the validations
+  /demandas:
+    post:
+      tags:
+      - Demanda
+      summary: "Cria uma demanda"
+      description: "Cria uma demanda com tecnologias e softskills"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/Demanda"
+      responses:
+        '201':
+          description: Created
+    get:
+      tags:
+      - Demanda
+      summary: "Retorna todas demandas"
+      description: "Retorna todas demandas"
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: "#/definitions/DemandaResponse"
+        '204':
+          description: No content
+  /demandas/{id}:
+    get:
+        tags:
+        - Demanda
+        summary: "Retorna uma demanda"
+        description: "Retorna uma demanda de acordo com o ID no Path"
+        parameters:
+        - name: "idDemanda"
+          in: "path"
+          description: "ID da demanda que deve retornar"
+          required: true
+          type: "integer"
+          format: "int64"
+        responses:
+          '200':
+            description: Ok
+            schema:
+              $ref: "#/definitions/DemandaIdResponse"
+          '204':
+            description: No content
+  /demandas/usuario/{idUsuario}:
+    get:
+        tags:
+        - Demanda
+        summary: "Retorna todas demandas de um usuário"
+        description: "Retorna todas demandas de um usuário com o ID no Path"
+        parameters:
+        - name: "idUsuario"
+          in: "path"
+          description: "ID do usuario"
+          required: true
+          type: "integer"
+          format: "int64"
+        responses:
+          '200':
+            description: Ok
+            schema:
+              $ref: "#/definitions/DemandaUsuarioResponse"
+          '204':
+            description: No content
+  /demandas/filtro-simples:
+    get:
+        tags:
+        - Demanda
+        summary: "Retorna todas demandas pelo título"
+        description: "Retorna todas demandas de um usuário com o ID no Path"
+        parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/DemandaFiltroSimples"
+        responses:
+          '200':
+            description: Ok
+          '204':
+            description: Ok, not found
+  /demandas/filtro:
+    get:
+        tags:
+        - Demanda
+        summary: "Retorna todas demandas de um usuário"
+        description: "Retorna todas demandas de um usuário com o ID no Path"
+        parameters:
+        - in: "body"
+          name: "body"
+          description: "Todos os campos são opcionais"
+          required: true
+          schema:
+            $ref: "#/definitions/DemandaFiltro"
+        responses:
+          '200':
+            description: Ok
+            schema:
+              $ref: "#/definitions/DemandaFiltroResponse"
+          '204':
+            description: No content
+definitions:
+    Contrato:
+      type: "object"
+      properties:
+        dataFim:
+          type: "string"
+          example: "2021-06-10T18:49:12.613"
+          format: "date-time"
+        valorHora:
+          type: "number"
+          example: 60.0
+          format: "double"
+        ofertas:
+          properties:
+            idOferta:
+              type: "number"
+              example: 2
+        demandas:
+          properties:
+            idDemanda:
+              type: "number"
+              example: 2
+    Demanda:
+      type: "object"
+      properties:
+        demandas:
+          properties:
+            titulo:
+              type: "string"
+              example: "Primeira demanda"
+            descricao:
+              type: "string"
+              example: "Essa é a primeira demanda"
+            salario:
+              type: "number"
+              example: 5000.0
+              format: "double"
+            usuario:
+              properties:
+                idUsuario:
+                  type: "number"
+                  example: 1
+        tecnologias:
+          type: array
+          example: [
+          {
+            tempoExperiencia: 10,
+            tecnologias: {
+              idTecnologia: 1
+            }
+          },
+          {
+            tempoExperiencia: 10,
+            tecnologias: {
+              idTecnologia: 2
+            }
+          }
+          ]
+        softskills:
+          type: array
+          example: [
+          {
+            notaSoftskill: 50,
+            softskill: {
+              idSoftSkills: 1
+            }
+          },
+          {
+            notaSoftskill: 50,
+            softskill: {
+              idSoftSkills: 2
+            }
+          }
+          ]
+    DemandaResponse:
+      type: "array"
+      example: [
+        {
+          idDemanda: 1,
+          titulo: "Primeira demanda",
+          descricao: "Essa é a primeira demanda",
+          createdAt: "2021-06-04T14:51:18.553",
+          salario: 0.0,
+          usuario: {
+              idUsuario: 3,
+              nome: "Thiago Barbosa",
+              email: "thiaguinho@gmail.com",
+              senha: "senha123",
+              descricao: "DBA",
+              classificacao: 5.0,
+              telefone: "962345673",
+              localizacao: {
+                  idLocalizacao: 1,
+                  cidade: "São Caetano do Sul",
+                  uf: "SP",
+                  cep: "09572520"
+              }
+          }
+        },
+        {
+          idDemanda: 2,
+          titulo: "Primeira demanda",
+          descricao: "Essa é a primeira demanda",
+          createdAt: "2021-06-04T14:51:21.737",
+          salario: 0.0,
+          usuario: {
+              idUsuario: 3,
+              nome: "Thiago Barbosa",
+              email: "thiaguinho@gmail.com",
+              senha: "senha123",
+              descricao: "DBA",
+              classificacao: 5.0,
+              telefone: "962345673",
+              localizacao: {
+                  idLocalizacao: 1,
+                  cidade": "São Caetano do Sul",
+                  uf: "SP",
+                  cep: "09572520"
+              }
+          }
+        }
+        ]
+    DemandaIdResponse:
+      type: "object"
+      properties:
+        idDemanda: 
+          type: number
+          example: 3
+        titulo: 
+          type: string
+          example: Segunda demanda
+        descricao: 
+          type: string
+          example: Essa é a primeira demanda
+        createdAt: 
+          type: string
+          example: 2021-06-05T16:27:57.36
+        salario: 
+          type: number
+          example: 2000
+        usuario: 
+          type: object
+          properties: 
+            idUsuario: 
+              type: number
+              example: 3
+            nome: 
+              type: string
+              example: Thiago Barbosa
+            email: 
+              type: string
+              example: thiaguinho@gmail.com
+            senha: 
+              type: string
+              example: senha123
+            descricao: 
+              type: string
+              example: DBA
+            classificacao: 
+              type: number
+              example: 5
+            telefone: 
+              type: string
+              example: 962345673
+            localizacao: 
+              type: object
+              properties: 
+                idLocalizacao: 
+                  type: number
+                  example: 1
+                cidade: 
+                  type: string
+                  example: São Caetano do Sul
+                uf: 
+                  type: string
+                  example: SP
+                cep: 
+                  type: string
+                  example: 09572520
+    DemandaUsuarioResponse:
+      type: "array"
+      example: [
+        {
+          idDemanda: 1,
+          titulo: "Primeira demanda",
+          descricao: "Essa é a primeira demanda",
+          createdAt: "2021-06-04T14:51:18.553",
+          salario: 0.0,
+          usuario: {
+              idUsuario: 3,
+              nome: "Thiago Barbosa",
+              email: "thiaguinho@gmail.com",
+              senha: "senha123",
+              descricao: "DBA",
+              classificacao: 5.0,
+              telefone: "962345673",
+              localizacao: {
+                  idLocalizacao: 1,
+                  cidade: "São Caetano do Sul",
+                  uf: "SP",
+                  cep: "09572520"
+              }
+          }
+        },
+        {
+          idDemanda: 2,
+          titulo: "Primeira demanda",
+          descricao: "Essa é a primeira demanda",
+          createdAt: "2021-06-04T14:51:21.737",
+          salario: 0.0,
+          usuario: {
+              idUsuario: 3,
+              nome: "Thiago Barbosa",
+              email: "thiaguinho@gmail.com",
+              senha: "senha123",
+              descricao: "DBA",
+              classificacao: 5.0,
+              telefone: "962345673",
+              localizacao: {
+                  idLocalizacao: 1,
+                  cidade": "São Caetano do Sul",
+                  uf: "SP",
+                  cep: "09572520"
+              }
+          }
+        }
+        ]
+    DemandaFiltroSimples:
+      type: "object"
+      properties:
+        titulo:
+          type: "string"
+          example: "Titulo demanda"
+          format: "date-time"
+    DemandaFiltro:
+      type: "object"
+      properties:
+        titulo: 
+          type: string
+          example: Primeira
+        data: 
+          type: string
+          example: 2021-06-05T16:27:57.36
+        UF: 
+          type: string
+          example: SP
+        salarioMin: 
+          type: number
+          example: 2400
+        salarioMax: 
+          type: number
+          example: 5000
+        usuario: 
+          type: string
+          example: Thiago
+        tecnologia: 
+          type: string
+          example: Java
+        experiencia: 
+          type: number
+          example: 1
+    DemandaFiltroResponse:
+      type: "array"
+      example: [
+      {
+        idDemanda: 8,
+        titulo: Primeira demanda,
+        descricao: Essa é a primeira demanda,
+        createdAt: 2021-06-07T18:16:29.04,
+        salario: 5000.0,
+        usuario: {
+            idUsuario: 3,
+            nome: Thiago Barbosa,
+            email: thiaguinho@gmail.com,
+            senha: senha123,
+            descricao: DBA,
+            classificacao: 5.0,
+            telefone: 962345673,
+            localizacao: {
+                idLocalizacao: 1,
+                cidade: São Caetano do Sul,
+                uf: SP,
+                cep: 09572520
+            }
+        }
+      },
+      {
+        idDemanda: 9,
+        titulo: Primeira demanda,
+        descricao: Essa é a primeira demanda,
+        createdAt: 2021-06-07T18:20:26.303,
+        salario: 5000.0,
+        usuario: {
+            idUsuario: 3,
+            nome: Thiago Barbosa,
+            email: thiaguinho@gmail.com,
+            senha: senha123,
+            descricao: DBA,
+            classificacao: 5.0,
+            telefone: 962345673,
+            localizacao: {
+                idLocalizacao: 1,
+                cidade: São Caetano do Sul,
+                uf: SP,
+                cep: 09572520
+            }
+        }
+      }
+      ]
