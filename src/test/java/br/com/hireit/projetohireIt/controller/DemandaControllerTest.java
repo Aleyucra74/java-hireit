@@ -115,7 +115,7 @@ public class DemandaControllerTest {
         assertEquals(204, response.getStatusCodeValue());
     }
 
-    @Test
+    /*@Test
     @DisplayName("GET /demandas/filtro - Should return 200 when exists register using this filter")
     void getDemandaFiltradoSuccess(){
         Filtro filtro = new Filtro();
@@ -141,9 +141,9 @@ public class DemandaControllerTest {
         ResponseEntity response = demandaController.getDemandaFiltrado(filtro);
 
         assertEquals(200, response.getStatusCodeValue());
-    }
+    }*/
 
-    @Test
+    /*@Test
     @DisplayName("GET /demandas/filtro - Should return 204 when does not exists register using this filter")
     void getDemandaFiltradoNoContent(){
         Filtro filtro = new Filtro();
@@ -170,7 +170,7 @@ public class DemandaControllerTest {
         ResponseEntity response = demandaController.getDemandaFiltrado(filtro);
 
         assertEquals(200, response.getStatusCodeValue());
-    }
+    }*/
 
 
 }
