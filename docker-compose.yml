@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  hireit:
+    container_name: hireit
+    build:
+      context: hireit
+    restart: always
+    ports:
+      - 9090:8080
+#    environment:
+#      SPRING_DATA_MONGODB_HOST: mongo
+    healthcheck:
+      test: "exit 0"
+#    depends_on:
+#      - mongo
+#  mysql:
+#    image: mysql:8.0
+#    container_name: mysql
+#    restart: always
+#    ports:
+#      - 3306:3306
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=urubu100
+#      - MYSQL_DATABASE=bdHireIt
+#    healthcheck:
+#      test: "exit 0"
